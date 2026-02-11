@@ -1,0 +1,4 @@
+.claude/*
+.env
+.vagrant/*
+settings.local.json
