@@ -87,6 +87,10 @@ sudo tar xzvfC cilium-linux-${CLI_ARCH}.tar.gz /usr/local/bin
 rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
 ```
 
+```bash
+cilium install
+```
+
 ### 5. Join the worker node (practice task)
 
 `kubeadm init` prints a `kubeadm join` command at the end. Copy it and run it
