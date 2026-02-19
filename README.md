@@ -244,7 +244,7 @@ sudo systemctl restart containerd
 
 **Nodes stay in NotReady after join:**
 
-A CNI plugin must be installed. Run the Flannel step on machine1 (see step 4).
+A CNI plugin must be installed. Run the Cilium step on machine1 (see step 4).
 
 **I need a fresh cluster:**
 
@@ -271,7 +271,7 @@ ping ubuntu1   # from machine2
 | Network               | Subnet           | Purpose                        |
 |-----------------------|------------------|--------------------------------|
 | Private (host-only)   | `192.168.56.0/24`| Node-to-node communication     |
-| Pod network (Flannel) | `10.244.0.0/16`  | Set via `--pod-network-cidr`   |
+| Pod network (Cilium) | `10.244.0.0/16`  | Set via `--pod-network-cidr`   |
 
 VMs communicate by hostname: `ping ubuntu2` from ubuntu1 (and vice versa).
 
