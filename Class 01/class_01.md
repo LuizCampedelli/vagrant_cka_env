@@ -8,7 +8,7 @@ https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-clu
 
 ## Control Plane:
 
-in AWS Cloud
+in Cloud
 Kubeadm init
 
 in VM env:
@@ -33,13 +33,13 @@ kubeclt run first-pod --image nginx
 
 kubeadm join 10.0.2.15:6443 --token hqxzm1.eckh2wpelsni58cy --discovery-token-ca-cert-hash sha256:bc61c1f4b920b3151603d0ee346c0c0878c3dc90a398a6af82bbd0a4c643f0ed
 
-## upgrade a cluster:
+## Upgrade a cluster:
 
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
-apt update (to check the packages that will be updated)
+apt-get update (to check the packages that will be updated)
 
 apt-mark unhold kubeadm kubelet kubectl
 
@@ -89,6 +89,51 @@ image: registry.k8s.io/kube-apiserver:v1.32.12
 
 Than, for safety, mark the hold:
 ape-mark hold kubeadm kubectl kubelet
+
+## Upgrade Worker node
+
+First lets drain the node, in the control plane VM:
+
+kubectl drain <name_of_node> --ignore-daemonsets (To ignore CNI's)
+
+if you have one pod, like this environment:
+
+kubectl drain <name_of_node> --ignore-daemonsets --force (it will delete the pod)
+
+in both cases, a flag will be added: Schedulingdisable, nothing will be added to this node.
+
+Now, in the worker node VM:
+
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+apt-get update (to check the packages that will be updated)
+
+aFollow thse steps:
+
+1. apt-mark unhold kubeadm
+
+2. apt install kubeadm
+
+3. kubeadm upgrade node
+
+4. 1. apt-mark unhold kubectl kubelet
+
+2. apt install kubectl kubelet
+
+Once upgraded:
+
+1. apt-mark hold kubectl kubelet kubeadm
+
+Now, lets incordon the worker node, in control plane VM:
+
+1. kubectl incordon <name_of_node>
+
+To test, lets run a pod:
+
+1. kubectl run nginx --image nginx
+
 
 ## Trobleoushooting
 
