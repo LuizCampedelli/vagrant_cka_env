@@ -90,7 +90,7 @@ apt install kubectl
 ```
 
 ```bash
-restart your VM with: vagrant reload\
+restart your VM with: vagrant reload
 ```
 
 Now:
